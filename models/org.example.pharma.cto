@@ -28,6 +28,14 @@ enum OrderStatus {
     o DELIVERED
 }
 
+asset License identified by licenseId {
+	o String licenseId
+    o Integer issueYear
+    o Integer expiryYear
+    --> Regulator regulator
+    --> Manufacturer manufacturer
+}
+
 asset Order identified by orderId {
 	o String orderId
     o OrderStatus orderStatus
@@ -35,12 +43,27 @@ asset Order identified by orderId {
     --> MedicalStore owner
 }
 
+participant Regulator identified by regulatorId {
+	o String regulatorId
+    o String regulatorName
+}
+
 participant Manufacturer identified by manufacturerId {
 	o String manufacturerId
+    o String manufacturerName
 }
 
 participant MedicalStore identified by medicalStoreId {
 	o String medicalStoreId
+    o String medicalStoreName
+}
+
+transaction IssueLicense {
+	o String licenseId
+    o Integer issueYear
+    o Integer expiryYear
+    --> Regulator regulator
+    --> Manufacturer manufacturer
 }
 
 transaction PlaceOrder {

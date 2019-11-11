@@ -1,0 +1,38 @@
+/** Sample queries for Commodity Trading business network
+*/
+
+query selectAllMedicines {
+  description: "Select all medicine"
+  statement:
+      SELECT org.example.pharma.Order
+}
+
+query selectAllLicenses {
+  description: "Select all License"
+  statement:
+      SELECT org.example.pharma.License
+}
+
+
+query selectMedicineOrderByOrderId {
+  description: "Select MedicineOrder using OrderId"
+  statement:
+      SELECT org.example.pharma.Order
+          WHERE (orderId==_$orderID)
+}
+
+/*
+query selectCommoditiesByOwner {
+  description: "Select all commodities based on their owner"
+  statement:
+      SELECT org.example.mynetwork.Commodity
+          WHERE (owner == _$owner)
+}
+
+query selectCommoditiesWithHighQuantity {
+  description: "Select commodities based on quantity"
+  statement:
+      SELECT org.example.mynetwork.Commodity
+          WHERE (quantity > 60)
+}
+*/
