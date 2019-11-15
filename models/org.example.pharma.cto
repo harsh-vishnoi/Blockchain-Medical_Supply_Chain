@@ -17,9 +17,12 @@ namespace org.example.pharma
 concept Medicine {
 	--> Manufacturer manufacturer
     o String Name
-    o Integer Price
+}
+
+concept MedicineDetails {
+    o Integer Price 
     o DateTime ManufacturingDate
-    o DateTime ExpiryDate
+    o DateTime ExpiryDate 
 }
 
 enum OrderStatus {
@@ -29,17 +32,18 @@ enum OrderStatus {
 }
 
 asset License identified by licenseId {
-	o String licenseId
-    o Integer issueYear
-    o Integer expiryYear
+	  o String licenseId
+    o DateTime issueDate
+    o DateTime expiryDate
     --> Regulator regulator
     --> Manufacturer manufacturer
 }
 
 asset Order identified by orderId {
-	o String orderId
+	  o String orderId
     o OrderStatus orderStatus
     o Medicine medicine
+    o MedicineDetails medicineDetails optional
     --> MedicalStore owner
 }
 
@@ -60,8 +64,8 @@ participant MedicalStore identified by medicalStoreId {
 
 transaction IssueLicense {
 	o String licenseId
-    o Integer issueYear
-    o Integer expiryYear
+    o DateTime issueDate
+    o DateTime expiryDate
     --> Regulator regulator
     --> Manufacturer manufacturer
 }
@@ -74,5 +78,6 @@ transaction PlaceOrder {
 
 transaction UpdateOrderStatus {
   o OrderStatus orderStatus
+  o MedicineDetails medicineDetails
   --> Order order
 }
