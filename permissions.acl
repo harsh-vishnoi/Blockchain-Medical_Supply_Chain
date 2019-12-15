@@ -12,6 +12,131 @@
  * limitations under the License.
  */
 
+rule Default {
+    description: "Allow all participants access to all resources"
+    participant: "org.hyperledger.composer.system.Participant"
+    operation: READ
+    resource: "org.hyperledger.composer.system.*"
+    action: ALLOW
+}
+
+rule AllowParticipantAccess {
+  description: "Participant can see and update their own record only"
+  participant(t): "org.example.pharma.*"
+  operation: READ, UPDATE
+  resource(v): "org.example.pharma.*"
+  condition: (v.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule ManufacturerAssetAccess {
+  description: "Manufacturer can see and update their own asset only"
+  participant(t): "org.example.pharma.Manufacturer"
+  operation: READ, UPDATE
+  resource(v): "org.example.pharma.*"
+  condition: (v.Manufacturer.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule RegulatorAssetAccess {
+  description: "Regulator can see and update their own asset only"
+  participant(t): "org.example.pharma.Regulator"
+  operation: READ, UPDATE, CREATE
+  resource(v): "org.example.pharma.*"
+  condition: (v.LicenseIssuer.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule MedicalStoreAssetAccess {
+  description: "MedicalStore can see and update their own asset only"
+  participant(t): "org.example.pharma.MedicalStore"
+  operation: READ, UPDATE, CREATE
+  resource(v): "org.example.pharma.*"
+  condition: (v.Store.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule ShipmentAssetAccess {
+  description: "Shipment can see and update their own asset only"
+  participant(t): "org.example.pharma.ShippingCompany"
+  operation: READ, UPDATE, CREATE
+  resource(v): "org.example.pharma.*"
+  condition: (v.Company.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule ManufacturerHistorianAccess {
+  description: "Manufacturer can see and update their own record only"
+  participant: "org.example.pharma.Manufacturer"
+  operation: READ, CREATE, UPDATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+rule RegulatorHistorianAccess {
+  description: "Regulator can see and update their own record only"
+  participant: "org.example.pharma.Regulator"
+  operation: READ, CREATE, UPDATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+rule MedicalStoreHistorianAccess {
+  description: "Regulator can see and update their own record only"
+  participant: "org.example.pharma.MedicalStore"
+  operation: READ, CREATE, UPDATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+rule ShippingCompanyHistorianAccess {
+  description: "ShippingCompany can see and update their own record only"
+  participant: "org.example.pharma.ShippingCompany"
+  operation: READ, CREATE, UPDATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+
+rule ManufacturerCreateAccess {
+  description: "Manufacturer can see and update their own record only"
+  participant: "org.example.pharma.Manufacturer"
+  operation: READ, CREATE, UPDATE
+  resource: "org.example.pharma.UpdateOrderStatus"
+  action: ALLOW
+}
+
+rule ShippingCompanyCreateAccess {
+  description: "Manufacturer can see and update their own record only"
+  participant: "org.example.pharma.ShippingCompany"
+  operation: READ, CREATE, UPDATE
+  resource: "org.example.pharma.UpdateShipmentStatus"
+  action: ALLOW
+}
+
+rule MedicalStoreCreateAccess {
+  description: "Allow Medical Store to create Order"
+  participant: "org.example.pharma.MedicalStore"
+  operation: READ, CREATE, UPDATE
+  resource: "org.example.pharma.PlaceOrder"
+  action: ALLOW
+}
+
+rule RegulatorCreateAccess {
+  description: "Allow Medical Store to create Order"
+  participant: "org.example.pharma.Regulator"
+  operation: READ, UPDATE, CREATE
+  resource: "org.example.pharma.IssueLicense"
+  action: ALLOW
+}
+
+rule RegulatorAccess {
+  description: "Allow Regulator to read everything"
+  participant: "org.example.pharma.Regulator"
+  operation: READ
+  resource: "org.example.pharma.*"
+  action: ALLOW
+}
+
 rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"

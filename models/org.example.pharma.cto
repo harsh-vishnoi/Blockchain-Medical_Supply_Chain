@@ -15,69 +15,99 @@
 namespace org.example.pharma
 
 concept Medicine {
-	--> Manufacturer manufacturer
-    o String Name
+  o String Name
 }
 
 concept MedicineDetails {
-    o Integer Price 
-    o DateTime ManufacturingDate
-    o DateTime ExpiryDate 
+  o Integer Price 
+  o Integer DrugId
+  o Integer PacketNo
+  o DateTime ManufacturingDate
+  o DateTime ExpiryDate 
+}
+
+enum ShipmentStatus {
+  o SHIPPED
+  o ARRIVED
+  o ONWAY
+  o DELIVERED
 }
 
 enum OrderStatus {
 	o PLACED
-    o SCHEDULED_FOR_MANUFACTURE
-    o DELIVERED
+  o SCHEDULED_FOR_MANUFACTURE
+  o DELIVERED
 }
 
 asset License identified by licenseId {
-	  o String licenseId
-    o DateTime issueDate
-    o DateTime expiryDate
-    --> Regulator regulator
-    --> Manufacturer manufacturer
+  o String licenseId
+  o DateTime issueDate
+  o DateTime expiryDate
+  --> Regulator LicenseIssuer
+  --> Manufacturer Manufacturer
 }
 
 asset Order identified by orderId {
-	  o String orderId
-    o OrderStatus orderStatus
-    o Medicine medicine
-    o MedicineDetails medicineDetails optional
-    --> MedicalStore owner
+  o String orderId
+  o OrderStatus orderStatus
+  o ShipmentStatus shipmentStatus optional
+  o Medicine medicine
+  o MedicineDetails medicineDetails optional
+  o DateTime ShipmentShipped optional
+  o DateTime ShipmentArrived optional
+  o DateTime ShipmentOnWay optional
+  o DateTime ShipmentDelivered optional
+  --> MedicalStore Store
+  --> Regulator LicenseIssuer
+  --> Manufacturer Manufacturer
+  --> ShippingCompany Company
 }
 
 participant Regulator identified by regulatorId {
 	o String regulatorId
-    o String regulatorName
+  o String regulatorName
 }
 
 participant Manufacturer identified by manufacturerId {
 	o String manufacturerId
-    o String manufacturerName
+  o String manufacturerName
 }
 
 participant MedicalStore identified by medicalStoreId {
 	o String medicalStoreId
-    o String medicalStoreName
+  o String medicalStoreName
+}
+
+participant ShippingCompany identified by shippingCompanyId {
+	o String shippingCompanyId
+  o String shippingCompanyName
 }
 
 transaction IssueLicense {
 	o String licenseId
-    o DateTime issueDate
-    o DateTime expiryDate
-    --> Regulator regulator
-    --> Manufacturer manufacturer
+  o DateTime issueDate
+  o DateTime expiryDate
+  --> Regulator LicenseIssuer
+  --> Manufacturer Manufacturer
 }
 
 transaction PlaceOrder {
   o String orderId
   o Medicine medicine
-  --> MedicalStore owner
+  --> MedicalStore Store
+  --> Regulator LicenseIssuer
+  --> Manufacturer Manufacturer
+  --> ShippingCompany Company
 }
 
 transaction UpdateOrderStatus {
   o OrderStatus orderStatus
   o MedicineDetails medicineDetails
+  --> Order order
+}
+
+transaction UpdateShipmentStatus {
+  o ShipmentStatus shipmentStatus
+  o DateTime time
   --> Order order
 }
